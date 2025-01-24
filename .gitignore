@@ -175,3 +175,4 @@ cython_debug/
 
 # user specific files
 hf_token.txt
+models/

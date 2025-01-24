@@ -37,7 +37,7 @@ def load_pipeline():
 # create a new empty streamlit app
 import streamlit as st
 
-pipeline = load_pipeline()
+# pipeline = load_pipeline()
 
 st.title("Image Generation App")
 
@@ -52,15 +52,16 @@ if seed is None:
     seed = random.randint(0, MAX_SEED)    
 
 if st.button("Generate Image"):
-    with st.spinner("Generating..."):
-        generator = torch.Generator("cuda").manual_seed(seed)
-        image = pipeline(
-            prompt,
-            num_inference_steps=num_inference_steps,
-            guidance_scale=guidance_scale,
-            height=resolution,
-            width=resolution,
-            max_sequence_length=512,
-            generator=generator
-        ).images[0]
-        st.image(image)
+    # with st.spinner("Generating..."):
+    #     generator = torch.Generator("cuda").manual_seed(seed)
+    #     image = pipeline(
+    #         prompt,
+    #         num_inference_steps=num_inference_steps,
+    #         guidance_scale=guidance_scale,
+    #         height=resolution,
+    #         width=resolution,
+    #         max_sequence_length=512,
+    #         generator=generator
+    #     ).images[0]
+    #     st.image(image)
+    st.write('Done')
