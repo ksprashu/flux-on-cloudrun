@@ -9,9 +9,7 @@
 ## Typical build
 `docker build -t flux-dev-cr .`
 
-## Build with secrets
-`docker build --secret id=hf_token,src=hf_token.txt -t REGION-docker.pkg.dev/YOUR_PROJECT_ID/REPOSITORY_NAME/IMAGE_NAME:TAG .`
-
+## Build for Artifact Registry push
 `docker build -t us-central1-docker.pkg.dev/ksp-demos/docker-ai-images/flux-dev-cr:v1 .`
 
 # 2. Create the Artifact Registry repository (if it doesn't exist)
@@ -23,14 +21,15 @@ gcloud artifacts repositories create docker-ai-images \
 ```
 
 # 3. Configure Docker for authentication
-gcloud auth configure-docker us-central1-docker.pkg.dev
+`gcloud auth configure-docker us-central1-docker.pkg.dev`
 
 # 4. Push the image
-docker push us-central1-docker.pkg.dev/ksp-sandbox/docker-ai-images/flux-dev-cr:v1
+`docker push us-central1-docker.pkg.dev/ksp-demos/docker-ai-images/flux-dev-cr:v1`
 
 # 5. Deploy to Cloud Run
+```
 gcloud beta run deploy flux-dev-cr \
-  --image us-central1-docker.pkg.dev/ksp-sandbox/docker-ai-images/flux-dev-cr:v1 \
+  --image us-central1-docker.pkg.dev/ksp-demos/docker-ai-images/flux-dev-cr:v1 \
   --region=us-central1 \
   --cpu 8 \
   --memory 32Gi \
@@ -39,8 +38,8 @@ gcloud beta run deploy flux-dev-cr \
   --gpu-type nvidia-l4 \
   --max-instances 1 \
   --allow-unauthenticated \
-  --port=8501 \
---update-secrets HF_TOKEN=projects/ksp-demos/secrets/hf_token:latest
+  --port=8080
+```
 
 
 

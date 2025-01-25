@@ -10,7 +10,7 @@ import torch
 if not torch.cuda.is_available():
     raise ValueError("Need a CUDA GPU.")
 
-MODEL_ID = "black-forest-labs/FLUX.1-dev"
+MODEL_ID = "black-forest-labs/FLUX.1-schnell"
 MAX_SEED = np.iinfo(np.int32).max
 
 def load_pipeline():
@@ -37,14 +37,14 @@ def load_pipeline():
 # create a new empty streamlit app
 import streamlit as st
 
-# pipeline = load_pipeline()
+pipeline = load_pipeline()
 
 st.title("Image Generation App")
 
 prompt = st.text_input("Enter your prompt:", "A photo of an astronaut riding a horse on mars")
 resolution = st.slider("Resolution", min_value=256, max_value=1024, value=512)
-num_inference_steps = st.slider("Number of inference steps", min_value=1, max_value=100, value=30)
-guidance_scale = st.slider("Guidance scale", min_value=1.0, max_value=20.0, value=3.5)
+num_inference_steps = st.slider("Number of inference steps", min_value=1, max_value=20, value=4)
+# guidance_scale = st.slider("Guidance scale", min_value=1.0, max_value=20.0, value=3.5)
 seed = st.number_input("Seed (leave blank for random)", value=None, step=1)
 
 
@@ -52,16 +52,16 @@ if seed is None:
     seed = random.randint(0, MAX_SEED)    
 
 if st.button("Generate Image"):
-    # with st.spinner("Generating..."):
-    #     generator = torch.Generator("cuda").manual_seed(seed)
-    #     image = pipeline(
-    #         prompt,
-    #         num_inference_steps=num_inference_steps,
-    #         guidance_scale=guidance_scale,
-    #         height=resolution,
-    #         width=resolution,
-    #         max_sequence_length=512,
-    #         generator=generator
-    #     ).images[0]
-    #     st.image(image)
-    st.write('Done')
+    with st.spinner("Generating..."):
+        generator = torch.Generator("cuda").manual_seed(seed)
+        image = pipeline(
+            prompt,
+            num_inference_steps=num_inference_steps,
+            # guidance_scale=guidance_scale,
+            height=resolution,
+            width=resolution,
+            max_sequence_length=256,
+            generator=generator
+        ).images[0]
+        st.image(image)
+        st.write('Done')
