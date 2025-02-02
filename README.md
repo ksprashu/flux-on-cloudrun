@@ -12,6 +12,9 @@
 ## Build for Artifact Registry push
 `docker build -t us-central1-docker.pkg.dev/ksp-demos/docker-ai-images/flux-dev-cr:v1 .`
 
+## Build using Cloud Build
+`gcloud builds submit --tag us-central1-docker.pkg.dev/ksp-demos/docker-ai-images/flux-dev-cr:v6 --machine-type="E2_HIGHCPU_32" .`
+
 # 2. Create the Artifact Registry repository (if it doesn't exist)
 ```
 gcloud artifacts repositories create docker-ai-images \

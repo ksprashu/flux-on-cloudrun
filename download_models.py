@@ -1,8 +1,20 @@
 from diffusers import FluxTransformer2DModel, FluxPipeline, BitsAndBytesConfig
 from transformers import T5EncoderModel, BitsAndBytesConfig as TBnBConfig
 import torch
+from google.cloud import storage
+import os
 
 MODEL_ID = "black-forest-labs/FLUX.1-dev"
+
+
+def upload_to_gcs(bucket_name, source_file_name, destination_blob_name):
+    """Uploads a file to the GCS bucket."""
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(destination_blob_name)
+    blob.upload_from_filename(source_file_name)
+    print(f"File {source_file_name} uploaded to {destination_blob_name}.")
+
 
 def download_models():
     # Download transformer
@@ -36,3 +48,8 @@ if __name__ == "__main__":
     if not torch.cuda.is_available():
         raise ValueError("CUDA GPU is required for model download.")
     download_models()
+
+    # upload all the files downloaded to /models to GCS
+    bucket_name = 'flux-dev-cr-models'
+    local_file_path = '/mount'
+    destination_blob_name = '.'
