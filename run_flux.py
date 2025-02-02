@@ -70,11 +70,29 @@ if __name__ == "__main__":
         max_sequence_length=512,
         generator=torch.manual_seed(args.seed), # for reproducibility.
     ).images[0]
-    
+
+
+
     if args.out_path is None:
         args.out_path = str(random.randint(0, MAX_SEED)) + ".png"
 
     image.save(args.out_path)
     print(f"Image serialized to {args.out_path}.")
 
-    
+    from google.cloud import storage
+    import os
+
+    # # Configure Google Cloud Storage
+    # # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/path/to/your/credentials.json" #replace with your credentials path
+    storage_client = storage.Client()
+    bucket_name = "flux-images-ksp" #replace with your bucket name
+    bucket = storage_client.bucket(bucket_name)
+    blob_name = args.out_path
+    blob = bucket.blob(blob_name)
+
+    # Upload the image to Google Cloud Storage
+    blob.upload_from_filename(args.out_path)
+    print(f"Image uploaded to gs://{bucket_name}/{blob_name}")
+
+
+
